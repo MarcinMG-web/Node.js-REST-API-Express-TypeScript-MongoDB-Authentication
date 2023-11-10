@@ -1,4 +1,4 @@
-import mongoose, { trusted } from 'mongoose';
+import mongoose from 'mongoose';
 
 /**
  * Schema
@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   userName: { type: String, required: true },
   email: { type: String, required: true },
   authentication: {
-    password: { type: String, required: trusted, selected: false },
+    password: { type: String, required: true, selected: false },
     salt: { type: String, select: false },
     sessionToken: { type: String, select: false },
   },
