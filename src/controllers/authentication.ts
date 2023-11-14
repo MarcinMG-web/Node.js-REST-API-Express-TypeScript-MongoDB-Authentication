@@ -6,7 +6,6 @@ import { authentication, random } from '../helpers';
 /**
  * Login
  */
-
 export const login = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password } = req.body;
