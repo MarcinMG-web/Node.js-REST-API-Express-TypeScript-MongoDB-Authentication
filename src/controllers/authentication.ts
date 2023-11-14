@@ -1,28 +1,29 @@
 import express from 'express';
-import { createUsers, getUsersByEmail } from 'db/users';
-import { random, authentication } from '../helpers';
+
+import { getUserByEmail, createUser } from '../db/users';
+import { authentication, random } from '../helpers';
 
 /**
  * Register
  */
-
 export const register = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password, userName } = req.body;
 
     // Check user
     if (!email || !password || !userName) {
-      return res.sendStatus(400).send('Miss param');
+      return res.sendStatus(400);
     }
 
-    const existingUser = await getUsersByEmail(email);
+    const existingUser = await getUserByEmail(email);
+
     if (existingUser) {
-      return res.sendStatus(400).send('User not exist');
+      return res.sendStatus(400);
     }
 
     // Create user
     const salt = random();
-    const user = await createUsers({
+    const user = await createUser({
       email,
       userName,
       authentication: {
@@ -31,9 +32,9 @@ export const register = async (req: express.Request, res: express.Response) => {
       },
     });
 
-    return res.sendStatus(200).json(user).end();
+    return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
-    return res.sendStatus(400).send('Something went wrong!');
+    return res.sendStatus(400);
   }
 };

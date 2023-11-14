@@ -1,11 +1,15 @@
-import bodyParser from 'body-parser';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
 import express from 'express';
 import http from 'http';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
+import compression from 'compression';
+import cors from 'cors';
+
 import dotenv from 'dotenv';
+
+import router from './router';
 import mongoose from 'mongoose';
+
 
 /**
  * Server
@@ -13,7 +17,7 @@ import mongoose from 'mongoose';
 
 const app = express();
 dotenv.config();
-const port = process.env.PORT;
+const PORT = process.env.PORT;
 
 app.use(
   cors({
@@ -27,16 +31,21 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+server.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 /**
  * DB
  */
 
-const mongoURL = process.env.MONGO_URL;
-
+const MONGO_URL = process.env.MONGO_URL;
 mongoose.Promise = Promise;
-mongoose.connect(mongoURL);
+mongoose.connect(MONGO_URL);
 mongoose.connection.on('error', (error: Error) => console.log(error));
+
+/**
+ * Router
+ */
+
+app.use('/', router());
