@@ -1,4 +1,4 @@
-import express from 'express';
+import { Request, Response } from 'express';
 
 import { getUserByEmail, createUser } from '../db/users';
 import { authentication, random } from '../helpers';
@@ -6,7 +6,7 @@ import { authentication, random } from '../helpers';
 /**
  * Login
  */
-export const login = async (req: express.Request, res: express.Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
 
@@ -44,8 +44,7 @@ export const login = async (req: express.Request, res: express.Response) => {
       path: '/',
     });
 
-    return res.status(200).json(user).end()
-
+    return res.status(200).json(user).end();
   } catch (error) {
     console.error(error);
     res.sendStatus(400);
@@ -55,7 +54,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 /**
  * Register
  */
-export const register = async (req: express.Request, res: express.Response) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, userName } = req.body;
 
