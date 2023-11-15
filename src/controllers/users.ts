@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { getUsers, deleteUserById } from '../db/users';
+import {
+  getUsers,
+  deleteUserById,
+  updateUserById,
+  getUserById,
+} from '../db/users';
 
 /**
  * Get all Users
@@ -37,5 +42,32 @@ export const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.error(error);
     res.sendStatus(400);
+  }
+};
+
+/**
+ * Update user by Id
+ */
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { email, userName } = req.body;
+    // Check
+    if (!email || !userName) {
+      return res.sendStatus(400);
+    }
+
+    const user = await getUserById(id);
+
+    // Updated user
+    user.email = email;
+    user.userName = userName;
+
+    await user.save();
+
+    return res.status(200).json(user).end();
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(400);
   }
 };
