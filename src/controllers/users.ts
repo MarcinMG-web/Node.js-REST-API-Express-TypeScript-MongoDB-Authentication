@@ -1,10 +1,5 @@
 import { Request, Response } from 'express';
-import {
-  getUsers,
-  deleteUserById,
-  updateUserById,
-  getUserById,
-} from '../db/users';
+import { getUsers, deleteUserById, getUserById } from '../db/users';
 
 /**
  * Get all Users
@@ -14,15 +9,24 @@ export const getAllUsers = async (_: Request, res: Response) => {
     const users = await getUsers();
 
     if (!users) {
-      return res.sendStatus(400).json({
-        message: 'No users',
+      return res.json({
+        status: 400,
+        message: 'Empty users',
       });
     }
 
-    return res.status(200).json(users).end();
+    return res
+      .json({
+        status: 200,
+        message: 'Ok',
+        data: users,
+      })
+      .end();
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };
 
@@ -32,16 +36,33 @@ export const getAllUsers = async (_: Request, res: Response) => {
 export const deleteUser = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.json({
+        status: 400,
+        message: 'Miss id of user',
+      });
+    }
 
     const deleteUser = await deleteUserById(id);
     if (!deleteUser) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'User by this id doesn`t exists',
+      });
     }
 
-    return res.status(200).json(deleteUser).end();
+    return res
+      .json({
+        status: 200,
+        message: 'This user has been deleted',
+        data: deleteUser,
+      })
+      .end();
   } catch (error) {
-    console.error(error);
-    res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };
 
@@ -53,8 +74,18 @@ export const updateUser = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { email, userName } = req.body;
     // Check
+
+    if (!id) {
+      return res.json({
+        status: 400,
+        message: 'Miss id of user',
+      });
+    }
     if (!email || !userName) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'Miss params email or password',
+      });
     }
 
     const user = await getUserById(id);
@@ -65,9 +96,17 @@ export const updateUser = async (req: Request, res: Response) => {
 
     await user.save();
 
-    return res.status(200).json(user).end();
+    return res
+      .json({
+        status: 200,
+        message: 'This user has been updated',
+        data: user,
+      })
+      .end();
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };

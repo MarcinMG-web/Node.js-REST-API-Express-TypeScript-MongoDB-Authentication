@@ -12,7 +12,10 @@ export const login = async (req: Request, res: Response) => {
 
     // Check provided value
     if (!email || !password) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'Miss params email or password',
+      });
     }
 
     const user = await getUserByEmail(email).select(
@@ -20,13 +23,19 @@ export const login = async (req: Request, res: Response) => {
     );
 
     if (!user) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'User not exists',
+      });
     }
 
     // Authentication user
     const expectedHash = authentication(user.authentication.salt, password);
     if (user.authentication.password !== expectedHash) {
-      return res.sendStatus(403);
+      return res.json({
+        status: 403,
+        message: 'Authentication issue',
+      });
     }
 
     // Updated User session token
@@ -44,10 +53,18 @@ export const login = async (req: Request, res: Response) => {
       path: '/',
     });
 
-    return res.status(200).json(user).end();
+    return res
+      .json({
+        status: 200,
+        message: 'Ok',
+        data: user,
+      })
+      .end();
   } catch (error) {
-    console.error(error);
-    res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };
 
@@ -60,13 +77,19 @@ export const register = async (req: Request, res: Response) => {
 
     // Check user
     if (!email || !password || !userName) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'Miss params email, password or userName',
+      });
     }
 
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      return res.sendStatus(400);
+      return res.json({
+        status: 400,
+        message: 'User exists',
+      });
     }
 
     // Create user
@@ -80,9 +103,17 @@ export const register = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(user).end();
+    return res
+      .json({
+        status: 201,
+        message: 'Ok',
+        data: user,
+      })
+      .end();
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };

@@ -13,21 +13,36 @@ export const isOwner = async (
 ) => {
   try {
     const { id } = req.params;
-    // Get User Identification
+    // Get user identification
     const currentUserId = get(req, 'identity._id') as string;
 
+    if (!id) {
+      return res.json({
+        status: 400,
+        message: 'Miss id of user',
+      });
+    }
+
     if (!currentUserId) {
-      return res.sendStatus(403);
+      return res.json({
+        status: 403,
+        message: 'Current users does`t have id',
+      });
     }
 
     if (currentUserId.toString() !== id) {
-      return res.sendStatus(403);
+      return res.json({
+        status: 403,
+        message: 'This user is not owner',
+      });;
     }
 
     next();
   } catch (error) {
-    console.error(error);
-    res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };
 
@@ -42,20 +57,28 @@ export const isAuthenticated = async (
   try {
     const sessionToken = req.cookies['AUTHORIZATION-COOKIE'];
     if (!sessionToken) {
-      return res.sendStatus(403);
+      return res.json({
+        status: 403,
+        message: 'Miss AUTHORIZATION-COOKIE',
+      });
     }
 
     const existingUser = await getUserBySessionToken(sessionToken);
     if (!existingUser) {
-      return res.sendStatus(403);
+      return res.json({
+        status: 403,
+        message: 'This users does`t have session token',
+      });
     }
 
-    // Assigning User Identification to the Request Object
+    // Assigning user identification to the request object
     merge(req, { identity: existingUser });
 
     return next();
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(400);
+    return res.json({
+      status: 400,
+      message: `Something went wrong with: ${error}`,
+    });
   }
 };
