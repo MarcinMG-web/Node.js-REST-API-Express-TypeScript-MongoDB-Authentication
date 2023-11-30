@@ -10,7 +10,6 @@ A simple REST API built with Node.js using the Express framework, TypeScript, an
 
 | ENV |
 | --- |
-
 PORT="YOUR_PORT"
 MONGO_URL="YOUR_URL"
 SECRET="YOUR_SECRET"
