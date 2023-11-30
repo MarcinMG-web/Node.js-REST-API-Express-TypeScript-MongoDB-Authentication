@@ -9,7 +9,8 @@ A simple REST API built with Node.js using the Express framework, TypeScript, an
 3. Prepare .env file and include settings:
 
 | ENV |
-|------------|
+| --- |
+
 PORT="YOUR_PORT"
 MONGO_URL="YOUR_URL"
 SECRET="YOUR_SECRET"
@@ -18,15 +19,15 @@ SECRET="YOUR_SECRET"
 
 ## API Routes
 
-| API ROUTES | Description |
-|------------|------------|
-| POST /auth/register | Register a new user. |
-| POST /auth/login | Login user after register. |
-| GET /users | Fetches a list of all users. |
-| GET /users/:id | Fetches information about a user with a specific ID. |
-| POST /users | Adds a new user. |
-| PUT  /users/:id | Updates information about a user with a specific ID.|
-| DELETE /users/:id| Deletes a user with a specific ID.|
+| Method | Rout           | Description                                          |
+| ------ | -------------- | ---------------------------------------------------- |
+| POST   | /auth/register | Register a new user.                                 |
+| POST   | /auth/login    | Login user after register.                           |
+| GET    | /users         | Fetches a list of all users.                         |
+| GET    | /users/:id     | Fetches information about a user with a specific ID. |
+| POST   | /users         | Adds a new user.                                     |
+| PUT    | /users/:id     | Updates information about a user with a specific ID. |
+| DELETE | /users/:id     | Deletes a user with a specific ID.                   |
 
 ## Technologies Used
 
