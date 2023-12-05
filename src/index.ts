@@ -8,8 +8,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import router from './router';
-import mongoose from 'mongoose';
 
+import connectDB from './db/configDB';
 
 /**
  * Server
@@ -39,10 +39,7 @@ server.listen(PORT, () => {
  * DB
  */
 
-const MONGO_URL = process.env.MONGO_URL;
-mongoose.Promise = Promise;
-mongoose.connect(MONGO_URL);
-mongoose.connection.on('error', (error: Error) => console.log(error));
+connectDB();
 
 /**
  * Router
